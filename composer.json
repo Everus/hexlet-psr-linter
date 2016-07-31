@@ -1,0 +1,16 @@
+{
+    "name": "everus/hexlet-psr-linter",
+    "description": "Small php lib to lint php",
+    "type": "library",
+    "require": {
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.2"
+    },
+    "authors": [
+        {
+            "name": "Mark Antipov",
+            "email": "oper29a@gmail.com"
+        }
+    ]
+}
