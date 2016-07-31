@@ -3,6 +3,7 @@
     "description": "Small php lib to lint php",
     "type": "library",
     "require": {
+        "nikic/php-parser": "^2.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.2",
@@ -13,5 +14,10 @@
             "name": "Mark Antipov",
             "email": "oper29a@gmail.com"
         }
-    ]
+    ],
+    "autoload": {
+      "psr-4": {
+        "HexletPSRLinter\\": "src/"
+      }
+    }
 }
