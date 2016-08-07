@@ -17,11 +17,11 @@ class VariableNameRuleTest extends TestCase
             ->getMock();
     }
 
-    public function testStrongCase()
+    public function testStudlyCapsCase()
     {
-        $node = new Variable('StrongTestName');
+        $node = new Variable('StudlyCaps');
         $linter = $this->getLinterMock();
-        $linter->expects($this->once())
+        $linter->expects($this->never())
             ->method('addReport')
             ->willReturn($linter);
         $rule = new VariableNameRule($linter);
@@ -89,7 +89,7 @@ class VariableNameRuleTest extends TestCase
     {
         $node = new PropertyProperty('_IncorrectPropertyName');
         $linter = $this->getLinterMock();
-        $linter->expects($this->once())
+        $linter->expects($this->atLeastOnce())
             ->method('addReport')
             ->willReturn($linter);
         $rule = new VariableNameRule($linter);

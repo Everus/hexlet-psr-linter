@@ -50,6 +50,7 @@ class Linter
     {
         return [
             new Rule\FuncNameRule($this),
+            new Rule\VariableNameRule($this)
         ];
     }
 
