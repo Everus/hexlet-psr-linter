@@ -41,7 +41,7 @@ class VariableNameRule extends RuleAbstract
         $passedStyles = array_filter($this->styles, function ($style) use ($node) {
             return preg_match($style, $node->name);
         });
-        if(empty($passedStyles)) {
+        if (empty($passedStyles)) {
             $this->report(
                 'Whatever naming convention is used SHOULD be applied consistently within a reasonable scope.',
                 Report::WARNING_SEVERITY,
@@ -56,7 +56,7 @@ class VariableNameRule extends RuleAbstract
     {
         $result = true;
         foreach ($this->getRules() as $rule) {
-            if(preg_match($rule['pattern'], $node->name)) {
+            if (preg_match($rule['pattern'], $node->name)) {
                 $this->report($rule['message'], $rule['severity'], $node);
                 $result = false;
             }
@@ -67,7 +67,7 @@ class VariableNameRule extends RuleAbstract
     public function enterNode(Node $node)
     {
         if ($node instanceof Variable || $node instanceof PropertyProperty) {
-            if($this->checkName($node)) {
+            if ($this->checkName($node)) {
                 $this->checkNamingStyle($node);
             }
         }
