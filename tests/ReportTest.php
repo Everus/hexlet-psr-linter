@@ -7,38 +7,51 @@ use PhpParser\NodeAbstract;
 
 class ReportTest extends TestCase
 {
-    public function testConstructor()
+    public function testMessageStorage()
     {
-        $report = new Report('test');
-        $this->assertEquals('test', $report->getMessage());
-        $this->assertEquals(Report::ERROR_SEVERITY, $report->getSeverity());
-        $this->assertEquals(null, $report->getNode());
+        $report = new Report();
+        $error = new Message('Test error', Message::ERROR_SEVERITY);
+        $warning1 = new Message('Test warning 1', Message::WARNING_SEVERITY);
+        $warning2 = new Message('Test warning 2', Message::WARNING_SEVERITY);
+
+        $report->addMessage($error);
+        $report->addMessage($warning1);
+        $report->addMessage($warning2);
+
+        $messages = $report->getMessages();
+        $errors = $report->getErrors();
+        $warnings = $report->getWarnings();
+
+        $this->assertCount(3, $messages);
+        $this->assertCount(1, $errors);
+        $this->assertCount(2, $warnings);
+
+        $this->assertContains($error, $errors);
+        $this->assertContains($warning1, $warnings);
+        $this->assertContains($warning2, $warnings);
     }
 
-    public function testMessageSetter()
+    public function testMessageStorageEmptyErrors()
     {
-        $report = new Report('test_message');
-        $this->assertEquals('test_message', $report->getMessage());
-        $report->setMessage('different_mess');
-        $this->assertEquals('different_mess', $report->getMessage());
+        $report = new Report();
+        $warning1 = new Message('Test warning 1', Message::WARNING_SEVERITY);
+        $report->addMessage($warning1);
+        $this->assertEmpty($report->getErrors());
     }
 
-    public function testSeveritySetter()
+    public function testMessageStorageWarningsErrors()
     {
-        $report = new Report('test_message', REPORT::WARNING_SEVERITY);
-        $this->assertEquals(REPORT::WARNING_SEVERITY, $report->getSeverity());
-        $report->setSeverity(Report::ERROR_SEVERITY);
-        $this->assertEquals(Report::ERROR_SEVERITY, $report->getSeverity());
+        $report = new Report();
+        $warning1 = new Message('Test warning 1', Message::ERROR_SEVERITY);
+        $report->addMessage($warning1);
+        $this->assertEmpty($report->getWarnings());
     }
 
-    public function testNodeSetter()
+    public function testMessageStorageEmpty()
     {
-        $report = new Report('test_message', REPORT::WARNING_SEVERITY);
-        $this->assertEquals(null, $report->getNode());
-        $node = $this->getMockBuilder(NodeAbstract::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $report->setNode($node);
-        $this->assertEquals($node, $report->getNode());
+        $report = new Report();
+        $this->assertEmpty($report->getMessages());
+        $this->assertEmpty($report->getErrors());
+        $this->assertEmpty($report->getWarnings());
     }
 }

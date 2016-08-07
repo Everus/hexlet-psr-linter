@@ -5,59 +5,58 @@ namespace HexletPSRLinter\Rule;
 use PHPUnit\Framework\TestCase;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\ClassMethod;
-use HexletPSRLinter\Linter;
+use HexletPSRLinter\Report;
 
 class FuncNameRuleTest extends TestCase
 {
-    protected function getLinterMock()
+    protected function getReportMock()
     {
-        return $this->getMockBuilder(Linter::class)
-            ->setMethods(['addReport'])
-            ->disableOriginalConstructor()
+        return $this->getMockBuilder(Report::class)
+            ->setMethods(['addMessage'])
             ->getMock();
     }
 
     public function testStrongCase()
     {
         $node = new Function_('StrongTestName');
-        $linter = $this->getLinterMock();
-        $linter->expects($this->once())
-            ->method('addReport')
-            ->willReturn($linter);
-        $rule = new FuncNameRule($linter);
+        $report = $this->getReportMock();
+        $report->expects($this->once())
+            ->method('addMessage')
+            ->willReturn($report);
+        $rule = new FuncNameRule($report);
         $rule->enterNode($node);
     }
 
     public function testCamelCase()
     {
         $node = new Function_('camelCase');
-        $linter = $this->getLinterMock();
-        $linter->expects($this->never())
-            ->method('addReport')
-            ->willReturn($linter);
-        $rule = new FuncNameRule($linter);
+        $report = $this->getReportMock();
+        $report->expects($this->never())
+            ->method('addMessage')
+            ->willReturn($report);
+        $rule = new FuncNameRule($report);
         $rule->enterNode($node);
     }
 
     public function testClassMethod()
     {
         $node = new ClassMethod('IncorrectMethodName');
-        $linter = $this->getLinterMock();
-        $linter->expects($this->once())
-            ->method('addReport')
-            ->willReturn($linter);
-        $rule = new FuncNameRule($linter);
+        $report = $this->getReportMock();
+        $report->expects($this->once())
+            ->method('addMessage')
+            ->willReturn($report);
+        $rule = new FuncNameRule($report);
         $rule->enterNode($node);
     }
 
     public function testNameWithTwoProblems()
     {
         $node = new Function_('_IncorectFuncNameWithCirilicО');
-        $linter = $this->getLinterMock();
-        $linter->expects($this->exactly(2))
-            ->method('addReport')
-            ->willReturn($linter);
-        $rule = new FuncNameRule($linter);
+        $report = $this->getReportMock();
+        $report->expects($this->exactly(2))
+            ->method('addMessage')
+            ->willReturn($report);
+        $rule = new FuncNameRule($report);
         $rule->enterNode($node);
     }
 }

@@ -5,70 +5,69 @@ namespace HexletPSRLinter\Rule;
 use PHPUnit\Framework\TestCase;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Stmt\PropertyProperty;
-use HexletPSRLinter\Linter;
+use HexletPSRLinter\Report;
 
 class VariableNameRuleTest extends TestCase
 {
-    protected function getLinterMock()
+    protected function getReportMock()
     {
-        return $this->getMockBuilder(Linter::class)
-            ->setMethods(['addReport'])
-            ->disableOriginalConstructor()
+        return $this->getMockBuilder(Report::class)
+            ->setMethods(['addMessage'])
             ->getMock();
     }
 
     public function testStudlyCapsCase()
     {
         $node = new Variable('StudlyCaps');
-        $linter = $this->getLinterMock();
-        $linter->expects($this->never())
-            ->method('addReport')
-            ->willReturn($linter);
-        $rule = new VariableNameRule($linter);
+        $report = $this->getReportMock();
+        $report->expects($this->never())
+            ->method('addMessage')
+            ->willReturn($report);
+        $rule = new VariableNameRule($report);
         $rule->enterNode($node);
     }
 
     public function testCamelCase()
     {
         $node = new Variable('camelCase');
-        $linter = $this->getLinterMock();
-        $linter->expects($this->never())
-            ->method('addReport')
-            ->willReturn($linter);
-        $rule = new VariableNameRule($linter);
+        $report = $this->getReportMock();
+        $report->expects($this->never())
+            ->method('addMessage')
+            ->willReturn($report);
+        $rule = new VariableNameRule($report);
         $rule->enterNode($node);
     }
 
     public function testUnderScopeCase()
     {
         $node = new Variable('underscope_case');
-        $linter = $this->getLinterMock();
-        $linter->expects($this->never())
-            ->method('addReport')
-            ->willReturn($linter);
-        $rule = new VariableNameRule($linter);
+        $report = $this->getReportMock();
+        $report->expects($this->never())
+            ->method('addMessage')
+            ->willReturn($report);
+        $rule = new VariableNameRule($report);
         $rule->enterNode($node);
     }
 
     public function testUnderPrefixScopeCase()
     {
         $node = new Variable('_underscope_case');
-        $linter = $this->getLinterMock();
-        $linter->expects($this->once())
-            ->method('addReport')
-            ->willReturn($linter);
-        $rule = new VariableNameRule($linter);
+        $report = $this->getReportMock();
+        $report->expects($this->once())
+            ->method('addMessage')
+            ->willReturn($report);
+        $rule = new VariableNameRule($report);
         $rule->enterNode($node);
     }
 
     public function testMixedCase()
     {
         $node = new Variable('Underscope_case');
-        $linter = $this->getLinterMock();
-        $linter->expects($this->once())
-            ->method('addReport')
-            ->willReturn($linter);
-        $rule = new VariableNameRule($linter);
+        $report = $this->getReportMock();
+        $report->expects($this->once())
+            ->method('addMessage')
+            ->willReturn($report);
+        $rule = new VariableNameRule($report);
         $rule->enterNode($node);
     }
 
@@ -76,11 +75,11 @@ class VariableNameRuleTest extends TestCase
     {
         $node = new Variable('underscope_case');
         $node2 = new Variable('camelCase');
-        $linter = $this->getLinterMock();
-        $linter->expects($this->once())
-            ->method('addReport')
-            ->willReturn($linter);
-        $rule = new VariableNameRule($linter);
+        $report = $this->getReportMock();
+        $report->expects($this->once())
+            ->method('addMessage')
+            ->willReturn($report);
+        $rule = new VariableNameRule($report);
         $rule->enterNode($node);
         $rule->enterNode($node2);
     }
@@ -88,11 +87,11 @@ class VariableNameRuleTest extends TestCase
     public function testPropertyPropertyMethod()
     {
         $node = new PropertyProperty('_IncorrectPropertyName');
-        $linter = $this->getLinterMock();
-        $linter->expects($this->atLeastOnce())
-            ->method('addReport')
-            ->willReturn($linter);
-        $rule = new VariableNameRule($linter);
+        $report = $this->getReportMock();
+        $report->expects($this->atLeastOnce())
+            ->method('addMessage')
+            ->willReturn($report);
+        $rule = new VariableNameRule($report);
         $rule->enterNode($node);
     }
 }
