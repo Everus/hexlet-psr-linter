@@ -3,79 +3,64 @@
 namespace HexletPSRLinter;
 
 use PhpParser\Node;
+use PhpParser\NodeTraverser;
+use PhpParser\ParserFactory;
+use PhpParser\Error;
 
 class Report
 {
-    const WARNING_SEVERITY = 'Warning';
-    const ERROR_SEVERITY = 'Error';
-    protected $node;
-    protected $message;
-    protected $severity;
-
+    protected $messages;
+    protected $name;
 
     /**
-    * @param string $severity
-    * @param string $message
-    * @param null|Node $node
-    */
-    public function __construct($message, $severity = self::ERROR_SEVERITY, $node = null)
+     * @return string
+     */
+    public function getName()
     {
-        $this->setSeverity($severity)
-            ->setNode($node)
-            ->setMessage($message);
+        return $this->name;
     }
 
     /**
-    * @param string $severity
-    * @return Message
-    */
-    public function setSeverity($severity)
+     * @param  string $name
+     *
+     * @return static
+     */
+    public function setName($name)
     {
-        $this->severity = $severity;
+        $this->name = $name;
         return $this;
     }
 
-    /**
-    * @return string
-    */
-    public function getSeverity()
+    public function getMessages()
     {
-        return $this->severity;
+        return $this->messages;
     }
 
-    /**
-    * @param null|Node $node
-    * @return Message
-    */
-    public function setNode($node)
+    public function addMessage(Message $message)
     {
-        $this->node =$node;
+        $this->messages[] = $message;
         return $this;
     }
 
-    /**
-    * @return null|Node
-    */
-    public function getNode()
+    public function report($message, $severity = Message::ERROR_SEVERITY, $node = null)
     {
-        return $this->node;
+        return $this->addMessage(new Message($message, $severity, $node));
     }
 
-    /**
-    * @param string $message
-    * @return Message
-    */
-    public function setMessage($message)
+    public function getMessagesBySeverity($severity)
     {
-        $this->message = $message;
-        return $this;
+        return array_filter($this->messages, function ($message) use ($severity) {
+            return $message->getSeverity() === $severity;
+        });
     }
 
-    /**
-    * @return string
-    */
-    public function getMessage()
+    public function getWarnings()
     {
-        return $this->message;
+        return $this->getMessagesBySeverity(Message::WARNING_SEVERITY);
+    }
+
+    public function getErrors()
+    {
+        return $this->getMessagesBySeverity(Message::ERROR_SEVERITY);
     }
 }
