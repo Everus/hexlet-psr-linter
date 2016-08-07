@@ -6,5 +6,5 @@ use HexletPSRLinter\LinterObserverAbstract;
 
 interface RenderInterface
 {
-    public function render(array $linter);
+    public function render(array $linters);
 }
