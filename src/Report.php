@@ -10,7 +10,12 @@ use PhpParser\Error;
 class Report
 {
     protected $messages;
-    protected $name;
+    protected $name = '';
+
+    public function __construct()
+    {
+        $this->messages = [];
+    }
 
     /**
      * @return string

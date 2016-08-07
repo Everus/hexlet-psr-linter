@@ -7,5 +7,5 @@ use PhpParser\NodeVisitor;
 
 interface RuleInterface extends NodeVisitor
 {
-    public function __construct(Report $linter);
+    public function __construct(Report $report);
 }

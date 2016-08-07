@@ -44,7 +44,7 @@ class VariableNameRule extends RuleAbstract
         if (empty($passedStyles)) {
             $this->report(
                 'Whatever naming convention is used SHOULD be applied consistently within a reasonable scope.',
-                Report::WARNING_SEVERITY,
+                Message::WARNING_SEVERITY,
                 $node
             );
         } else {
