@@ -43,12 +43,14 @@ class LintCommand extends Command
         } else {
             $files = [$filename];
         }
-        $linters = array_map(function ($file) {
-            $file = new File($file);
-            $linter = new Linter($file);
-            return $linter->lint();
+        $linter = new Linter();
+        $reports = array_map(function ($file) use ($linter) {
+            $code = file_get_contents($file);
+            $report = $linter->lint($code);
+            $report->setName($file);
+            return $report;
         }, $files);
         $render = new ConsoleRender();
-        $output->write($render->render($linters));
+        $output->write($render->render($reports));
     }
 }

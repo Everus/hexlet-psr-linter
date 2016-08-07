@@ -3,21 +3,21 @@
 namespace HexletPSRLinter\Rule;
 
 use HexletPSRLinter\Report;
-use HexletPSRLinter\Linter;
+use HexletPSRLinter\Message;
 use PhpParser\Node;
 
 abstract class RuleAbstract implements RuleInterface
 {
-    protected $linter;
+    protected $report;
 
-    public function __construct(Linter $linter)
+    public function __construct(Report $report)
     {
-        $this->linter = $linter;
+        $this->report = $report;
     }
 
     protected function report($message, $severity, $node = null)
     {
-        $this->linter->addReport(new Report($message, $severity, $node));
+        $this->report->addMessage(new Message($message, $severity, $node));
     }
 
     public function beforeTraverse(array $nodes)

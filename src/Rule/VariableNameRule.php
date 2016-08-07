@@ -5,7 +5,7 @@ namespace HexletPSRLinter\Rule;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Stmt\PropertyProperty;
-use HexletPSRLinter\Report;
+use HexletPSRLinter\Message;
 
 class VariableNameRule extends RuleAbstract
 {
@@ -21,17 +21,17 @@ class VariableNameRule extends RuleAbstract
             [
                 'pattern' => '/^[_]/',
                 'message' => 'Property names SHOULD NOT be prefixed with a single underscore to indicate protected or private visibility.',
-                'severity' => Report::WARNING_SEVERITY
+                'severity' => Message::WARNING_SEVERITY
             ],
             [
                 'pattern' => '/[^A-Za-z_]/',
                 'message' => 'Property names MUST contain only latin latters or _ underscope.',
-                'severity' => Report::ERROR_SEVERITY
+                'severity' => Message::ERROR_SEVERITY
             ],
             [
                 'pattern' => '/([A-Z]+\w*_)|(_\w*[A-Z]+)/',
                 'message' => 'Property names MUST be declared in $StudlyCaps, $camelCase, or $under_score.',
-                'severity' => Report::ERROR_SEVERITY
+                'severity' => Message::ERROR_SEVERITY
             ],
         ];
     }

@@ -3,42 +3,46 @@
 namespace HexletPSRLinter\Render;
 
 use HexletPSRLinter\Report;
-use HexletPSRLinter\Linter;
+use HexletPSRLinter\Message;
 
 class ConsoleRender implements RenderInterface
 {
     const LINE_BREAK = "\r\n";
 
-    protected function renderLinter(Linter $linter)
+    protected function renderReport(Report $report)
     {
-        $result = $linter->getFileName().self::LINE_BREAK;
-        foreach ($linter->getReports() as $report) {
-            $result .= $this->renderReport($report);
+        $results = [];
+        $results[] = $report->getName();
+        foreach ($report->getMessages() as $message) {
+            $results[] = $this->renderMessage($message);
+        }
+        return implode(self::LINE_BREAK, $results);
+    }
+
+    protected function renderMessage(Message $message)
+    {
+        switch ($message->getSeverity()) {
+            case Message::WARNING_SEVERITY:
+                $tag = 'comment';
+                break;
+            case Message::ERROR_SEVERITY:
+                $tag = 'error';
+                break;
+            default:
+                $tag = 'info';
+                break;
+        }
+        $result = '<'.$tag.'>'.$message->getSeverity().'</'.$tag.'> '.$message->getMessage();
+        if ($message->getNode() !== null) {
+            $result.= ' on line '.$message->getNode()->getLine();
         }
         return $result;
     }
 
-    protected function renderReport(Report $report)
+    protected function renderTotal($report)
     {
-        switch ($report->getSeverity()) {
-            case Report::WARNING_SEVERITY:
-                $tag = 'comment';
-                break;
-            default:
-                $tag = 'error';
-                break;
-        }
-        $result = '<'.$tag.'>'.$report->getSeverity().'</'.$tag.'> '.$report->getMessage();
-        if ($report->getNode() !== null) {
-            $result.= ' on line '.$report->getNode()->getLine();
-        }
-        return $result.self::LINE_BREAK;
-    }
-
-    protected function renderTotal($linter)
-    {
-        $warnings = $linter->getWarnings();
-        $errors = $linter->getErrors();
+        $warnings = $report->getWarnings();
+        $errors = $report->getErrors();
         if (empty($warnings) && empty($errors)) {
             return '<info>OK no problems detected.</info>'.self::LINE_BREAK;
         } else {
@@ -52,13 +56,15 @@ class ConsoleRender implements RenderInterface
         }
     }
 
-    public function render(array $linters)
+    public function render(array $reports)
     {
-        $result = '';
-        foreach ($linters as $linter) {
-            $result .= $this->renderLinter($linter).self::LINE_BREAK;
-            $result .= $this->renderTotal($linter);
+        $results = [];
+        foreach ($reports as $report) {
+            $results[] = $this->renderReport($report);
+            $results[] = '';
+            $results[] = $this->renderTotal($report);
         }
+        return implode(self::LINE_BREAK, $results);
         return $result;
     }
 }

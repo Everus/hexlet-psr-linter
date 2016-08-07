@@ -2,10 +2,10 @@
 
 namespace HexletPSRLinter\Rule;
 
-use HexletPSRLinter\Linter;
+use HexletPSRLinter\Report;
 use PhpParser\NodeVisitor;
 
 interface RuleInterface extends NodeVisitor
 {
-    public function __construct(Linter $linter);
+    public function __construct(Report $linter);
 }
