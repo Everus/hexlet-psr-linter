@@ -11,14 +11,14 @@ class FuncNameRule extends RuleAbstract
 {
     const CONTAIN_UNDERSCOPE_PATTERN = '/_+/i';
     const START_WITH_UPPERCASE_PATTERN = '/^[A-Z]/';
-    const CONTAIN_ONLY_LATIN_LETTERS_PATTERN = '/[^A-Za-z]/';
+    const CONTAIN_ONLY_LATIN_LETTERS_PATTERN = '/[^A-Za-z_]/';
 
     protected function getPatterns()
     {
         return [
             [
                 'pattern' => self::CONTAIN_UNDERSCOPE_PATTERN,
-                'message' => 'Method names SHOULD NOT contain a single underscore.',
+                'message' => 'Method names SHOULD NOT contain a single underscore',
                 'severity' => Message::WARNING_SEVERITY
             ],
             [
