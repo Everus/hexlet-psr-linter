@@ -20,7 +20,7 @@ class VariableNameRule extends RuleAbstract
         return [
             [
                 'pattern' => '/^[_]/',
-                'message' => 'Property names SHOULD NOT be prefixed with a single underscore to indicate protected or private visibility.',
+                'message' => 'Property names SHOULD NOT be prefixed with a single underscore.',
                 'severity' => Message::WARNING_SEVERITY
             ],
             [
