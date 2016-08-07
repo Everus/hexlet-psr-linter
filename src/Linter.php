@@ -77,7 +77,6 @@ class Linter
         $this->addVisitors($traverser);
         try {
             $stmts = $parser->parse($this->getCode());
-            print_r($stmts);
             $stmts = $traverser->traverse($stmts);
         } catch (Error $e) {
             $this->addReport(Report::ERROR_SEVERITY, 'Parse Error: '.$e->getMessage());
