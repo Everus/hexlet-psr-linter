@@ -9,7 +9,7 @@ use PhpParser\Error;
 
 class Linter
 {
-    public function generateRules($report)
+    protected function generateRules($report)
     {
         return [
             new Rule\FuncNameRule($report),
@@ -22,16 +22,6 @@ class Linter
         foreach ($this->getRules() as $rule) {
             $traverser->addVisitor($rule);
         }
-    }
-
-    public function getFileName()
-    {
-        return $this->file->getFileName();
-    }
-
-    public function getCode()
-    {
-        return $this->file->getContent();
     }
 
     public function lint($code)
