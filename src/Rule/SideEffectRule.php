@@ -58,7 +58,8 @@ class SideEffectRule extends RuleAbstract
      * @param Node $node
      * @return mixed
      */
-    protected function isNeutral(Node $node) {
+    protected function isNeutral(Node $node)
+    {
         return array_reduce($this->neutral, function ($acc, $class) use ($node) {
             return is_a($node, $class) ? true : $acc;
         }, false);
@@ -80,7 +81,7 @@ class SideEffectRule extends RuleAbstract
      */
     protected function report($text, $severity, $node = null)
     {
-        if(!$this->reported) {
+        if (!$this->reported) {
             $this->reported = true;
             return parent::report($text, $severity, $node);
         }
@@ -92,7 +93,7 @@ class SideEffectRule extends RuleAbstract
             return null;
         }
         if ($this->depth > 0) {
-            if($this->isDeclaration($node)) {
+            if ($this->isDeclaration($node)) {
                 $this->depth++;
                 return null;
             }
@@ -114,7 +115,7 @@ EOL;
             return null;
         }
         if ($this->isDeclaration($node)) {
-            if(!is_null($this->firstSideEffect)) {
+            if (!is_null($this->firstSideEffect)) {
                 $line = $this->firstSideEffect->getLine();
                 $text = <<<EOL
 File SHOULD declare new symbols or execute logic with side

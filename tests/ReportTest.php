@@ -39,6 +39,6 @@ class ReportTest extends TestCase
     public function testMessageStorageEmpty()
     {
         $report = new Report();
-        $this->assertEquals(['messages'=> []],$report->toArray());
+        $this->assertEquals(['messages'=> []], $report->toArray());
     }
 }
