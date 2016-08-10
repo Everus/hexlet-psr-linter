@@ -17,7 +17,7 @@ abstract class RuleAbstract implements RuleInterface
 
     protected function report($message, $severity, $node = null)
     {
-        $this->report->addMessage(new Message($message, $severity, $node));
+        $this->report->report($message, $severity, $node);
     }
 
     public function beforeTraverse(array $nodes)

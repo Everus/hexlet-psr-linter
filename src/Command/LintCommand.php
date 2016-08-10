@@ -44,12 +44,11 @@ class LintCommand extends Command
             $files = [$filename];
         }
         $linter = new Linter();
-        $reports = array_map(function ($file) use ($linter) {
+        $reports = array_reduce($files, function ($acc, $file) use ($linter) {
             $code = file_get_contents($file);
-            $report = $linter->lint($code);
-            $report->setName($file);
-            return $report;
-        }, $files);
+            $acc [$file] = $linter->lint($code);
+            return $acc;
+        }, []);
         $render = new ConsoleRender();
         $output->write($render->render($reports));
     }

@@ -12,26 +12,19 @@ class LinterTest extends TestCase
     public function testLinter($expected, $code)
     {
         $linter = new Linter();
-        $report = $linter->lint($code);
-        $messages = array_map(function ($message) {
-            return $message->getMessage();
-        }, $report->getMessages());
-        $this->assertEquals($expected, $messages);
+        $message = $linter->lint($code)->toArray()['messages'][0]['text'];
+        $this->assertEquals($expected, $message);
     }
 
     public function additionProvider()
     {
         return [
             [
-                [],
-                '<?php function test() {}'
-            ],
-            [
-                ['Method names SHOULD NOT contain a single underscore'],
+                'Functions MUST be declared in camelCase()',
                 '<?php function _underscore() {}'
             ],
             [
-                ['Parse Error: Syntax error, unexpected EOF, expecting \'(\' on line 1'],
+                'Parse Error: Syntax error, unexpected EOF, expecting \'(\' on line 1',
                 '<?php function _underscore'
             ]
         ];

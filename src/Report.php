@@ -3,14 +3,16 @@
 namespace HexletPSRLinter;
 
 use PhpParser\Node;
-use PhpParser\NodeTraverser;
-use PhpParser\ParserFactory;
-use PhpParser\Error;
 
 class Report
 {
+    const WARNING_SEVERITY = 'Warning';
+    const ERROR_SEVERITY = 'Error';
+    const INFO_SEVERITY = 'Info';
+    /**
+     * @var array Array of messages
+     */
     protected $messages;
-    protected $name = '';
 
     public function __construct()
     {
@@ -18,54 +20,27 @@ class Report
     }
 
     /**
-     * @return string
+     * @return array Array of data
      */
-    public function getName()
+    public function toArray()
     {
-        return $this->name;
+        return ['messages' => $this->messages];
     }
+
 
     /**
-     * @param  string $name
-     *
-     * @return static
+     * @param string $text Text message from Rule
+     * @param string $severity Severity of this message
+     * @param null|Node $node
+     * @return $this
      */
-    public function setName($name)
+    public function report($text, $severity = self::ERROR_SEVERITY, $node = null)
     {
-        $this->name = $name;
+        $this->messages[] = [
+            'text' => $text,
+            'severity' => $severity,
+            'node' => $node
+        ];
         return $this;
-    }
-
-    public function getMessages()
-    {
-        return $this->messages;
-    }
-
-    public function addMessage(Message $message)
-    {
-        $this->messages[] = $message;
-        return $this;
-    }
-
-    public function report($message, $severity = Message::ERROR_SEVERITY, $node = null)
-    {
-        return $this->addMessage(new Message($message, $severity, $node));
-    }
-
-    public function getMessagesBySeverity($severity)
-    {
-        return array_filter($this->messages, function ($message) use ($severity) {
-            return $message->getSeverity() === $severity;
-        });
-    }
-
-    public function getWarnings()
-    {
-        return $this->getMessagesBySeverity(Message::WARNING_SEVERITY);
-    }
-
-    public function getErrors()
-    {
-        return $this->getMessagesBySeverity(Message::ERROR_SEVERITY);
     }
 }

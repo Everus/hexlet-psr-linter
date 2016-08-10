@@ -9,19 +9,11 @@ use PhpParser\Error;
 
 class Linter
 {
-    protected function generateRules($report)
+    protected function generateRules(Report $report)
     {
         return [
-            new Rule\FuncNameRule($report),
-            new Rule\VariableNameRule($report)
+            new Rule\NameRule($report)
         ];
-    }
-
-    protected function addVisitors(NodeTraverser $traverser)
-    {
-        foreach ($this->getRules() as $rule) {
-            $traverser->addVisitor($rule);
-        }
     }
 
     public function lint($code)
