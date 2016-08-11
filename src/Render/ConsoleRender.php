@@ -7,44 +7,45 @@ use HexletPSRLinter\Message;
 
 class ConsoleRender implements RenderInterface
 {
-    const LINE_BREAK = "\r\n";
-
     protected function renderReport(Report $report)
     {
         $results = [];
-        $results[] = $report->getName();
-        foreach ($report->getMessages() as $message) {
-            $results[] = $this->renderMessage($message);
+        if (!empty($report->getMessages())) {
+            foreach ($report->getMessages() as $message) {
+                $results[] = $this->renderMessage($message);
+            }
+            $results[] = '';
         }
-        return implode(self::LINE_BREAK, $results);
+        $results[] = $this->renderTotal($report);
+        return implode(PHP_EOL, $results);
     }
 
-    protected function renderMessage(Message $message)
+    protected function renderMessage($message)
     {
-        switch ($message->getSeverity()) {
-            case Message::WARNING_SEVERITY:
+        switch ($message['severity']) {
+            case Report::WARNING_SEVERITY:
                 $tag = 'comment';
                 break;
-            case Message::ERROR_SEVERITY:
+            case Report::ERROR_SEVERITY:
                 $tag = 'error';
                 break;
             default:
                 $tag = 'info';
                 break;
         }
-        $result = '<'.$tag.'>'.$message->getSeverity().'</'.$tag.'> '.$message->getMessage();
-        if ($message->getNode() !== null) {
-            $result.= ' on line '.$message->getNode()->getLine();
+        $result = '<'.$tag.'>'.$message['severity'].':</'.$tag.'> '.$message['text'];
+        if ($message['node'] !== null) {
+            $result.= ' on line '.$message['node']->getLine();
         }
         return $result;
     }
 
-    protected function renderTotal($report)
+    protected function renderTotal(Report $report)
     {
         $warnings = $report->getWarnings();
         $errors = $report->getErrors();
         if (empty($warnings) && empty($errors)) {
-            return '<info>OK no problems detected.</info>'.self::LINE_BREAK;
+            return '<info>OK no problems detected.</info>'.PHP_EOL;
         } else {
             $warnings_count = count($warnings);
             $errors_count = count($errors);
@@ -52,19 +53,17 @@ class ConsoleRender implements RenderInterface
             return
                 '<error>'.
                     $total.' total problems detected('.$errors_count.' errors, '.$warnings_count.
-                    ' warnings).</error>'.self::LINE_BREAK;
+                    ' warnings).</error>'.PHP_EOL;
         }
     }
 
     public function render(array $reports)
     {
         $results = [];
-        foreach ($reports as $report) {
+        foreach ($reports as $filename => $report) {
+            $results[] = $filename;
             $results[] = $this->renderReport($report);
-            $results[] = '';
-            $results[] = $this->renderTotal($report);
         }
-        return implode(self::LINE_BREAK, $results);
-        return $result;
+        return implode(PHP_EOL, $results);
     }
 }

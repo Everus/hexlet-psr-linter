@@ -15,11 +15,14 @@ use HexletPSRLinter\Render\ConsoleRender;
 
 class LintCommand extends Command
 {
+    const ERROR_CODE = 1;
+    const GOOD_CODE = 0;
+
     protected function configure()
     {
         $this
             ->setName('lint')
-            ->setHelp("Lint file, use: psrlint <filename>")
+            ->setHelp("Lint files, use: psrlint <filename>")
             ->setDescription('Describe args behaviors')
             ->setDefinition(
                 new InputDefinition(array(
@@ -34,22 +37,27 @@ class LintCommand extends Command
         $filename = $input->getArgument('file');
         if (!$filename) {
             $output->writeln($this->getHelp());
-            return null;
+            return self::GOOD_CODE;
         }
         if (is_dir($filename)) {
             $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($filename));
             $files = new \RegexIterator($files, '/\.php$/');
             $files = iterator_to_array($files);
         } else {
-            $files = [$filename];
+            $files = [new \SplFileInfo($filename)];
         }
         $linter = new Linter();
         $reports = array_reduce($files, function ($acc, $file) use ($linter) {
             $code = file_get_contents($file);
-            $acc [$file] = $linter->lint($code);
+            $acc[$file->getFilename()] = $linter->lint($code);
             return $acc;
         }, []);
+
         $render = new ConsoleRender();
+
         $output->write($render->render($reports));
+        $result = self::GOOD_CODE;
+
+        return $result;
     }
 }
