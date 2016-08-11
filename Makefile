@@ -5,10 +5,10 @@ autoload:
 	composer dump-autoload
 
 lint:
-	composer exec 'phpcs --standard=PSR2 src tests'
+	composer exec 'phpcs --standard=PSR2 src tests --ignore=tests/Fixtures/*'
 
 test:
 	composer exec 'phpunit --color tests'
 
 cover:
-	composer exec 'phpunit --coverage-clover build/logs/clover.xml tests'
+	composer exec 'phpunit --coverage-clover build/logs/clover.xml'
