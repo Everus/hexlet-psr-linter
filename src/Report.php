@@ -19,6 +19,28 @@ class Report
         $this->messages = [];
     }
 
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
+    public function getMessagesBySeverity($severity)
+    {
+        return array_filter($this->messages, function ($message) use ($severity) {
+            return $message['severity'] === $severity;
+        });
+    }
+
+    public function getWarnings()
+    {
+        return $this->getMessagesBySeverity(Report::WARNING_SEVERITY);
+    }
+
+    public function getErrors()
+    {
+        return $this->getMessagesBySeverity(Report::ERROR_SEVERITY);
+    }
+
     /**
      * @return array Array of data
      */
