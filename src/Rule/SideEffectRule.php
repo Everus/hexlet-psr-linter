@@ -11,6 +11,14 @@ namespace HexletPSRLinter\Rule;
 use PhpParser\Node;
 use HexletPSRLinter\Report;
 
+use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\Node\Stmt\Use_;
+use PhpParser\Node\Stmt\UseUse;
+
+use PhpParser\Node\Stmt\Interface_;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\Function_;
+
 class SideEffectRule extends RuleAbstract
 {
     /**
@@ -21,12 +29,20 @@ class SideEffectRule extends RuleAbstract
     /**
      * @var array
      */
-    protected $declarations = [];
+    protected $declarations = [
+        Interface_::class,
+        Class_::class,
+        Function_::class
+    ];
 
     /**
      * @var array
      */
-    protected $neutral = [];
+    protected $neutral = [
+        Namespace_::class,
+        Use_::class,
+        UseUse::class
+    ];
 
     /**
      * @var null|Node
@@ -50,7 +66,7 @@ class SideEffectRule extends RuleAbstract
     protected function isDeclaration(Node $node)
     {
         return array_reduce($this->declarations, function ($acc, $class) use ($node) {
-            return is_a($node, $class) ? true : $acc;
+            return ($node instanceof $class) ? true : $acc;
         }, false);
     }
 
@@ -61,7 +77,7 @@ class SideEffectRule extends RuleAbstract
     protected function isNeutral(Node $node)
     {
         return array_reduce($this->neutral, function ($acc, $class) use ($node) {
-            return is_a($node, $class) ? true : $acc;
+            return ($node instanceof $class) ? true : $acc;
         }, false);
     }
 
@@ -104,11 +120,9 @@ class SideEffectRule extends RuleAbstract
             }
             if (!is_null($this->firstDeclaration)) {
                 $line = $this->firstDeclaration->getLine();
-                $text = <<<EOL
-File SHOULD declare new symbols or execute logic with side
-effects, but SHOULD NOT do both first declaration has been detected on line $line 
-after this side effect instruction has been detected
-EOL;
+                $text = "File SHOULD declare new symbols or execute logic with side ".
+                    "effects, but SHOULD NOT do both first declaration has been detected on line $line, ".
+                    "after this side effect instruction has been detected";
                 $this->report($text, Report::ERROR_SEVERITY, $node);
             }
             $this->firstSideEffect = is_null($this->firstSideEffect) ? $node : $this->firstSideEffect;
@@ -117,11 +131,9 @@ EOL;
         if ($this->isDeclaration($node)) {
             if (!is_null($this->firstSideEffect)) {
                 $line = $this->firstSideEffect->getLine();
-                $text = <<<EOL
-File SHOULD declare new symbols or execute logic with side
-effects, but SHOULD NOT do both. First side effect has been detected on line $line,
-after this declaration of new symbol has been detected
-EOL;
+                $text = "File SHOULD declare new symbols or execute logic with side ".
+                    "effects, but SHOULD NOT do both. First side effect has been detected on line $line, ".
+                    "after this declaration of new symbol has been detected";
                 $this->report($text, Report::ERROR_SEVERITY, $node);
             }
             $this->depth++;

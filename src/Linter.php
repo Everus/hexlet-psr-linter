@@ -12,7 +12,8 @@ class Linter
     protected function generateRules(Report $report)
     {
         return [
-            new Rule\NameRule($report)
+            new Rule\NameRule($report),
+            new Rule\SideEffectRule($report)
         ];
     }
 
