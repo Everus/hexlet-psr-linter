@@ -12,6 +12,7 @@ use PhpParser\Node;
 use HexletPSRLinter\Report;
 
 use PhpParser\Node\Stmt\Namespace_;
+use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node\Stmt\UseUse;
 
@@ -41,7 +42,8 @@ class SideEffectRule extends RuleAbstract
     protected $neutral = [
         Namespace_::class,
         Use_::class,
-        UseUse::class
+        UseUse::class,
+        Name::class
     ];
 
     /**
@@ -114,7 +116,7 @@ class SideEffectRule extends RuleAbstract
                 return null;
             }
         }
-        if ($this->isSideEffect($node)) {
+        if ($this->isSideEffect($node) && $this->depth == 0) {
             if ($this->depth > 0) {
                 return null;
             }

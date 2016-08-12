@@ -47,12 +47,12 @@ class ConsoleRender implements RenderInterface
         if (empty($warnings) && empty($errors)) {
             return '<info>OK no problems detected.</info>'.PHP_EOL;
         } else {
-            $warnings_count = count($warnings);
-            $errors_count = count($errors);
-            $total = $warnings_count + $errors_count;
+            $warningsCount = count($warnings);
+            $errorsCount = count($errors);
+            $total = $warningsCount + $errorsCount;
             return
                 '<error>'.
-                    $total.' total problems detected('.$errors_count.' errors, '.$warnings_count.
+                    $total.' total problems detected('.$errorsCount.' errors, '.$warningsCount.
                     ' warnings).</error>'.PHP_EOL;
         }
     }
