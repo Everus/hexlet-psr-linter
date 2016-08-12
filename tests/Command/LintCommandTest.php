@@ -51,6 +51,14 @@ class LintCommandTest extends TestCase
                 file_get_contents($fixturesPath.'LintTest5.txt')
             ],
             [
+                array('file' => $fixturesPath.'LintTest6.php'),
+                file_get_contents($fixturesPath.'LintTest6.txt')
+            ],
+            [
+                array('file' => $fixturesPath.'LintTest7.php'),
+                file_get_contents($fixturesPath.'LintTest7.txt')
+            ],
+            [
                 array('file' => $fixturesPath.'TestDirectory'),
                 file_get_contents($fixturesPath.'TestDirectory.txt')
             ],
