@@ -42,7 +42,7 @@ class NameRule extends RuleAbstract
 
     protected function checkName(Node $node)
     {
-        if($this->isMagicMethod($node)) {
+        if ($this->isMagicMethod($node)) {
             return true;
         }
         return preg_match(self::CAMEL_CASE_PATTERN, $node->name);
