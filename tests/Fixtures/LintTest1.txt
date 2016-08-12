@@ -1,0 +1,2 @@
+LintTest1.php
+OK no problems detected.

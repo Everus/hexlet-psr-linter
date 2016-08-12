@@ -1,0 +1,7 @@
+LintTest1.php
+OK no problems detected.
+
+LintTest2.php
+Warning: Functions MUST be declared in camelCase() on line 3
+
+1 total problems detected(0 errors, 1 warnings).

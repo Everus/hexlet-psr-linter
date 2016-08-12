@@ -1,0 +1,4 @@
+LintTest4.php
+Error: Parse Error: Syntax error, unexpected EOF, expecting '(' on line 3
+
+1 total problems detected(1 errors, 0 warnings).

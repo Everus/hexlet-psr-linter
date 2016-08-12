@@ -1,0 +1,1 @@
+Lint files, use: psrlint <filename>

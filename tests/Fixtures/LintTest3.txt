@@ -1,0 +1,4 @@
+LintTest3.php
+Error: File SHOULD declare new symbols or execute logic with side effects, but SHOULD NOT do both first declaration has been detected on line 3, after this side effect instruction has been detected on line 5
+
+1 total problems detected(1 errors, 0 warnings).

@@ -1,0 +1,6 @@
+<?php
+
+$someVar = '';
+
+
+function camelFunction() {}
