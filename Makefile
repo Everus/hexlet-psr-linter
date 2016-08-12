@@ -7,6 +7,9 @@ autoload:
 lint:
 	composer exec 'phpcs --standard=PSR2 src tests --ignore=tests/Fixtures/*'
 
+self-lint:
+	./psrlint src
+
 test:
 	composer exec 'phpunit --color tests'
 

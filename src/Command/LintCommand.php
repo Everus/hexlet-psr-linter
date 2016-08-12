@@ -15,7 +15,7 @@ use HexletPSRLinter\Render\ConsoleRender;
 
 class LintCommand extends Command
 {
-    const ERROR_CODE = 1;
+    const ERROR_EXIT_CODE = 1;
     const GOOD_CODE = 0;
 
     protected function configure()
@@ -56,8 +56,11 @@ class LintCommand extends Command
         $render = new ConsoleRender();
 
         $output->write($render->render($reports));
-        $result = self::GOOD_CODE;
 
-        return $result;
+        $result = array_reduce($reports, function ($acc, $item) {
+            return $acc || !empty($item->getWarnings()) || !empty($item->getErrors());
+        }, false);
+
+        return $result ? self::ERROR_EXIT_CODE : self::GOOD_CODE;
     }
 }
